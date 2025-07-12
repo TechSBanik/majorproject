@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Offers - Wander Vista</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            overflow: hidden;
+        }
+        /* Gradient Background Animation */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .offer-box {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-color: #fff;
+            border: 2px solid black;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: black;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+        }
+
+        .offer-box:hover {
+            background-color: #ff4d4d;
+            color: white;
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Glow Effect on Click */
+        .glow {
+            box-shadow: 0 0 20px 5px #ffeb3b;
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        /* Text Reveal Animation */
+        #offer-text {
+            position: absolute;
+            bottom: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            animation: fadeInBounce 1s ease-out;
+            opacity: 0;
+        }
+
+        @keyframes fadeInBounce {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(-10px);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Confetti Sprinkles */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ffeb3b;
+            border-radius: 50%;
+            animation: fall 1.5s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Go Back Button */
+        .btn-back {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: 1px solid black;
+            transition: background-color 0.3s;
+        }
+
+        .btn-back:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Go Back Button to Return to Home -->
+    <a href="index.html" class="btn-back">⬅️ Back to Home</a>
+
+    <!-- Offers Container -->
+    <div class="container">
+        <div class="offer-box" id="box1" onclick="showOffer(1)">Catch Me! 🎉</div>
+        <div class="offer-box" id="box2" onclick="showOffer(2)">Catch Me! 🎁</div>
+        <div class="offer-box" id="box3" onclick="showOffer(3)">Catch Me! ✈️</div>
+        <div class="offer-box" id="box4" onclick="showOffer(4)">Catch Me! 🏨</div>
+        <div class="offer-box" id="box5" onclick="showOffer(5)">Catch Me! 🌏</div>
+    </div>
+
+    <!-- Offer Text Display -->
+    <div id="offer-text">Try to catch a box to get an offer! 🎁</div>
+
+    <script>
+        // Array of offers to display dynamically
+        const offers = [
+            "🎉 20% Discount on All Packages!",
+            "🎁 Get a Free Flight Upgrade!",
+            "✈️ 1 Day Free Trip to India!",
+            "🏨 Complimentary 5-Star Hotel Stay!",
+            "🌏 Explore 3 Cities for the Price of 1!"
+        ];
+
+        // Track how many times each box is touched
+        const touchCounts = {
+            box1: 0,
+            box2: 0,
+            box3: 0,
+            box4: 0,
+            box5: 0
+        };
+
+        // Move the boxes randomly on hover (up to 10 touches)
+        const boxes = document.querySelectorAll('.offer-box');
+        boxes.forEach(box => {
+            box.addEventListener('mouseover', () => {
+                const boxId = box.id;
+                if (touchCounts[boxId] >= 10) return; // Stop moving if touched 10 times
+
+                const windowWidth = window.innerWidth - box.clientWidth;
+                const windowHeight = window.innerHeight - box.clientHeight;
+
+                // Generate random position within the window
+                const randomX = Math.floor(Math.random() * windowWidth);
+                const randomY = Math.floor(Math.random() * windowHeight);
+
+                // Move the box to the new random position
+                box.style.left = `${randomX}px`;
+                box.style.top = `${randomY}px`;
+
+                // Increment touch count
+                touchCounts[boxId]++;
+                if (touchCounts[boxId] === 10) {
+                    box.style.cursor = "default";
+                    box.style.backgroundColor = "#4caf50";
+                    box.innerText = "✅ Got Me!";
+                }
+            });
+        });
+
+        // Function to show offer when box is clicked
+        function showOffer(index) {
+            const offerText = document.getElementById('offer-text');
+            offerText.innerText = offers[index - 1];
+            offerText.style.animation = "fadeInBounce 1s ease-out";
+            offerText.style.opacity = "1";
+
+            // Add glow effect to clicked box
+            const box = document.getElementById(`box${index}`);
+            box.classList.add('glow');
+
+            // Generate confetti sprinkles on click
+            for (let i = 0; i < 30; i++) {
+                createConfetti(box.offsetLeft + 60, box.offsetTop + 60);
+            }
+
+            // Remove glow after 1.5s
+            setTimeout(() => {
+                box.classList.remove('glow');
+            }, 1500);
+        }
+
+        // Create confetti sprinkles dynamically
+        function createConfetti(x, y) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = `${x}px`;
+            confetti.style.top = `${y}px`;
+
+            // Randomize color and rotation
+            const colors = ["#ffeb3b", "#ff4d4d", "#ff00ff", "#4caf50", "#03a9f4"];
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            document.body.appendChild(confetti);
+
+            // Remove confetti after animation ends
+            setTimeout(() => {
+                confetti.remove();
+            }, 1500);
+        }
+
+        // Initial position for all boxes
+        function positionBoxes() {
+            boxes.forEach((box, index) => {
+                const windowWidth = window.innerWidth - box.clientWidth;
+                const windowHeight = window.innerHeight - box.clientHeight;
+
+                const randomX = Math.floor(Math.random() * windowWidth);
+                const randomY = Math.floor(Math.random() * windowHeight);
+
+                box.style.left = `${randomX}px`;
+                box.style.top = `${randomY}px`;
+            });
+        }
+
+        // Position boxes when the page loads
+        document.addEventListener('DOMContentLoaded', positionBoxes);
+    </script>
+
+</body>
+</html>
